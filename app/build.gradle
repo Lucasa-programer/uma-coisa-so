@@ -10,7 +10,19 @@ android {
         versionCode 1
         versionName '1.0'
     }
+    def ks = file('keystore.jks')
+    signingConfigs {
+        fixa {
+            if (ks.exists()) {
+                storeFile ks
+                storePassword System.getenv('KEYSTORE_PASS')
+                keyAlias 'umacoisaso'
+                keyPassword System.getenv('KEYSTORE_PASS')
+            }
+        }
+    }
     buildTypes {
+        debug { if (ks.exists()) signingConfig signingConfigs.fixa }
         release { minifyEnabled false }
     }
     compileOptions {
